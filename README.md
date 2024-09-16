@@ -19,5 +19,5 @@ Client
 
 To Compile this file
 ```
-gcc server.cpp -o server.out
+gcc server.c -o server.o
 ```
