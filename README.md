@@ -1,4 +1,4 @@
-HTTP Server in C++
+HTTP Server in C
 
 - Create a socket
 - Bind the socket to the port
@@ -19,5 +19,5 @@ Client
 
 To Compile this file
 ```
-g++ server.cpp -o server.out
+gcc server.cpp -o server.out
 ```
