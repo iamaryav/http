@@ -181,50 +181,56 @@ void *handle_client(void *arg) {
 }
 
 int main(int argc, char *argv[]) {
-    int server_fd;
     struct sockaddr_in server_addr;
 
-    // create server socket
-    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("socket failed");
+    // create socket for server
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_fd == -1) {
+        perror("socket creation failed...");
         exit(EXIT_FAILURE);
+    }else{
+        printf("Socket successfully created...\n");
     }
 
-    // config socket
+    // configure socket with IPv4, localhost and 8080 port
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = INADDR_ANY;
     server_addr.sin_port = htons(PORT);
 
-    // bind socket to port
-    if (bind(server_fd, 
-            (struct sockaddr *)&server_addr, 
-            sizeof(server_addr)) < 0) {
-        perror("bind failed");
+    // bind socket to host and port
+    int binded = bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+    if (binded == -1) {
+        perror("Server bind failed...");
         exit(EXIT_FAILURE);
+    }else{
+        printf("Server successfully binded...\n");
     }
 
-    // listen for connections
-    if (listen(server_fd, 10) < 0) {
-        perror("listen failed");
+    // listen up to 5 client connections
+    int listened = listen(server_fd, 5);
+    if (listened == -1) {
+        perror("Not able to listen...");
         exit(EXIT_FAILURE);
+    }else{
+        printf("Listening successfull...\n");
     }
-
     printf("Server listening on port %d\n", PORT);
+
+    // Infinite loop for continuous listening
     while (1) {
-        // client info
+        // client details 
         struct sockaddr_in client_addr;
         socklen_t client_addr_len = sizeof(client_addr);
         int *client_fd = malloc(sizeof(int));
 
         // accept client connection
-        if ((*client_fd = accept(server_fd, 
-                                (struct sockaddr *)&client_addr, 
-                                &client_addr_len)) < 0) {
+        *client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &client_addr_len);
+        if (client_fd < 0) {
             perror("accept failed");
             continue;
         }
 
-        // create a new thread to handle client request
+        // create a new thread to handle all client request per thread
         pthread_t thread_id;
         pthread_create(&thread_id, NULL, handle_client, (void *)client_fd);
         pthread_detach(thread_id);
