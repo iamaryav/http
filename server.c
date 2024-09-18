@@ -230,7 +230,7 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        // create a new thread to handle all client request per thread
+        // create a new thread to handle clients request per thread
         pthread_t thread_id;
         pthread_create(&thread_id, NULL, handle_client, (void *)client_fd);
         pthread_detach(thread_id);
