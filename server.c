@@ -35,6 +35,8 @@ const char *get_mime_type(const char *file_ext) {
         return "image/jpeg";
     } else if (strcasecmp(file_ext, "png") == 0) {
         return "image/png";
+    } else if(strcasecmp(file_ext, "json") == 0) {
+        return "application/json";
     } else {
         return "application/octet-stream";
     }
